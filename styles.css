@@ -59,3 +59,18 @@ button {
 .choice:hover {
     background-color: #ddd;
 }
+
+/* Add these styles to your existing CSS */
+#feedback-container {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #ff0000; /* Red color for wrong answer */
+}
+
+.correct {
+    color: #008000; /* Green color for correct answer */
+}
+
+.wrong {
+    color: #ff0000; /* Red color for wrong answer */
+}

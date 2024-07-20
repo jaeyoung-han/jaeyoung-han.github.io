@@ -8,11 +8,13 @@ let currentCardIndex = 0;
 
 const flashcardContainer = document.getElementById('flashcard-container');
 const choicesContainer = document.getElementById('choices-container');
+const feedbackContainer = document.getElementById('feedback-container');
 const nextCardButton = document.getElementById('next-card');
 
 function showFlashcard(index) {
     flashcardContainer.textContent = flashcards[index].question;
     showChoices(index);
+    feedbackContainer.textContent = ''; // Clear previous feedback
 }
 
 function showChoices(index) {
@@ -31,9 +33,11 @@ function showChoices(index) {
 
 function checkAnswer(selectedChoice, correctAnswer) {
     if (selectedChoice === correctAnswer) {
-        alert('Correct!');
+        feedbackContainer.textContent = 'Correct!';
+        feedbackContainer.className = 'correct';
     } else {
-        alert('Wrong! The correct answer is: ' + correctAnswer);
+        feedbackContainer.textContent = `Wrong! The correct answer is: ${correctAnswer}`;
+        feedbackContainer.className = 'wrong';
     }
 }
 
