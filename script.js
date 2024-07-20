@@ -1,24 +1,45 @@
 const flashcards = [
-    { question: '안녕하세요', answer: 'Hello' },
-    { question: '감사합니다', answer: 'Thank you' },
-    { question: '사랑해요', answer: 'I love you' }
+    { question: '안녕하세요', answer: 'Hello', choices: ['Hello', 'Goodbye', 'Thank you', 'Please'] },
+    { question: '감사합니다', answer: 'Thank you', choices: ['Sorry', 'Please', 'Thank you', 'Excuse me'] },
+    { question: '사랑해요', answer: 'I love you', choices: ['I hate you', 'I love you', 'I miss you', 'Hello'] }
 ];
 
 let currentCardIndex = 0;
 
 const flashcardContainer = document.getElementById('flashcard-container');
+const choicesContainer = document.getElementById('choices-container');
 const nextCardButton = document.getElementById('next-card');
 
 function showFlashcard(index) {
-    console.log('Showing flashcard:', index); // Debugging statement
     flashcardContainer.textContent = flashcards[index].question;
+    showChoices(index);
+}
+
+function showChoices(index) {
+    choicesContainer.innerHTML = ''; // Clear previous choices
+    const choices = flashcards[index].choices;
+    choices.forEach(choice => {
+        const choiceElement = document.createElement('div');
+        choiceElement.className = 'choice';
+        choiceElement.textContent = choice;
+        choiceElement.addEventListener('click', () => {
+            checkAnswer(choice, flashcards[index].answer);
+        });
+        choicesContainer.appendChild(choiceElement);
+    });
+}
+
+function checkAnswer(selectedChoice, correctAnswer) {
+    if (selectedChoice === correctAnswer) {
+        alert('Correct!');
+    } else {
+        alert('Wrong! The correct answer is: ' + correctAnswer);
+    }
 }
 
 nextCardButton.addEventListener('click', () => {
     currentCardIndex = (currentCardIndex + 1) % flashcards.length;
-    console.log('Next card index:', currentCardIndex); // Debugging statement
     showFlashcard(currentCardIndex);
 });
 
-console.log('Initial flashcard index:', currentCardIndex); // Debugging statement
 showFlashcard(currentCardIndex);
