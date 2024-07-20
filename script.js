@@ -6,29 +6,33 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let currentCardIndex = 0;
+    let currentKoreanText = ''; // Variable to store the current Korean text
+    let score = 0; // Variable to store the score
 
     const flashcardContainer = document.getElementById('flashcard-container');
     const choicesContainer = document.getElementById('choices-container');
     const feedbackContainer = document.getElementById('feedback-container');
     const nextCardButton = document.getElementById('next-card');
+    const replayButton = document.getElementById('replay');
+    const scoreDisplay = document.getElementById('score');
 
     function showFlashcard(index) {
-        const questionText = flashcards[index].question;
-        flashcardContainer.textContent = questionText;
-        showChoices(index);
+        const flashcard = flashcards[index];
+        currentKoreanText = flashcard.question; // Store the current Korean text
+        flashcardContainer.textContent = flashcard.question;
+        showChoices(flashcard);
         feedbackContainer.textContent = ''; // Clear previous feedback
-        speakKorean(questionText); // Speak the Korean text
+        speakKorean(flashcard.question); // Speak the Korean text
     }
 
-    function showChoices(index) {
+    function showChoices(flashcard) {
         choicesContainer.innerHTML = ''; // Clear previous choices
-        const choices = flashcards[index].choices;
-        choices.forEach(choice => {
+        flashcard.choices.forEach(choice => {
             const choiceElement = document.createElement('div');
             choiceElement.className = 'choice';
             choiceElement.textContent = choice;
             choiceElement.addEventListener('click', () => {
-                checkAnswer(choice, flashcards[index].answer);
+                checkAnswer(choice, flashcard.answer);
             });
             choicesContainer.appendChild(choiceElement);
         });
@@ -39,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackContainer.textContent = feedback;
         feedbackContainer.className = selectedChoice === correctAnswer ? 'correct' : 'wrong';
         speak(feedback); // Speak feedback in English
+
+        if (selectedChoice === correctAnswer) {
+            score++; // Increment score if answer is correct
+            updateScore(); // Update score display
+        }
     }
 
     function speak(text) {
@@ -52,10 +61,20 @@ document.addEventListener('DOMContentLoaded', () => {
         window.speechSynthesis.speak(utterance);
     }
 
+    function updateScore() {
+        scoreDisplay.textContent = score; // Update the score display
+    }
+
     nextCardButton.addEventListener('click', () => {
         currentCardIndex = (currentCardIndex + 1) % flashcards.length;
         showFlashcard(currentCardIndex);
     });
 
-    showFlashcard(currentCardIndex);
+    replayButton.addEventListener('click', () => {
+        if (currentKoreanText) {
+            speakKorean(currentKoreanText); // Replay the current Korean text
+        }
+    });
+
+    showFlashcard(currentCardIndex); // Load the first flashcard
 });
