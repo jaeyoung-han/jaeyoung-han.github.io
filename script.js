@@ -12,9 +12,11 @@ const feedbackContainer = document.getElementById('feedback-container');
 const nextCardButton = document.getElementById('next-card');
 
 function showFlashcard(index) {
-    flashcardContainer.textContent = flashcards[index].question;
+    const questionText = flashcards[index].question;
+    flashcardContainer.textContent = questionText;
     showChoices(index);
     feedbackContainer.textContent = ''; // Clear previous feedback
+    speakKorean(questionText); // Speak the Korean text
 }
 
 function showChoices(index) {
@@ -32,13 +34,21 @@ function showChoices(index) {
 }
 
 function checkAnswer(selectedChoice, correctAnswer) {
-    if (selectedChoice === correctAnswer) {
-        feedbackContainer.textContent = 'Correct!';
-        feedbackContainer.className = 'correct';
-    } else {
-        feedbackContainer.textContent = `Wrong! The correct answer is: ${correctAnswer}`;
-        feedbackContainer.className = 'wrong';
-    }
+    const feedback = selectedChoice === correctAnswer ? 'Correct!' : `Wrong! The correct answer is: ${correctAnswer}`;
+    feedbackContainer.textContent = feedback;
+    feedbackContainer.className = selectedChoice === correctAnswer ? 'correct' : 'wrong';
+    speak(feedback); // Speak feedback in English
+}
+
+function speak(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+}
+
+function speakKorean(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ko-KR'; // Set the language to Korean
+    window.speechSynthesis.speak(utterance);
 }
 
 nextCardButton.addEventListener('click', () => {
